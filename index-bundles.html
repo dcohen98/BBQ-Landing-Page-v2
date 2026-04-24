@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baseball BBQ — Father's Day Gift Bundles</title>
+<style>
+  :root {
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #6b6b68;
+    --color-text-tertiary: #a0a09c;
+    --color-text-success: #0f6e56;
+    --color-text-info: #185FA5;
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f4f2eb;
+    --color-background-tertiary: #eeece4;
+    --color-background-success: #e1f5ee;
+    --color-background-info: #e6f1fb;
+    --color-border-tertiary: rgba(0,0,0,0.1);
+    --color-border-secondary: rgba(0,0,0,0.22);
+    --color-border-success: #9fe1cb;
+    --color-border-info: #b5d4f4;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: var(--color-background-tertiary); font-family: var(--font-sans); color: var(--color-text-primary); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 920px; margin: 0 auto; background: var(--color-background-primary); border-radius: var(--border-radius-lg); padding: 32px 36px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .hidden { display: none; }
+  .nav-bar { max-width: 920px; margin: 0 auto 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--color-text-secondary); }
+  .nav-back { background: transparent; border: none; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; padding: 4px 0; font-family: inherit; }
+  .nav-back:hover { color: var(--color-text-primary); }
+  .nav-step { font-weight: 500; }
+
+  /* STEP 1 — BUNDLE PICKER */
+  .picker-header { text-align: center; margin-bottom: 28px; }
+  .picker-title { font-size: 24px; font-weight: 500; margin: 0 0 6px; }
+  .picker-sub { font-size: 14px; color: var(--color-text-secondary); margin: 0; max-width: 520px; margin: 0 auto; }
+  .bundles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .bundle { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 22px 20px; display: flex; flex-direction: column; position: relative; transition: border-color 0.15s, transform 0.15s; background: var(--color-background-primary); }
+  .bundle:hover { border-color: var(--color-border-secondary); transform: translateY(-2px); }
+  .bundle.featured { border-color: var(--color-text-primary); border-width: 1.5px; }
+  .bundle-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--color-text-primary); color: var(--color-background-primary); font-size: 10px; font-weight: 500; padding: 4px 10px; border-radius: 10px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .bundle-thumb { height: 110px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--color-text-secondary); }
+  .bundle-thumb svg { width: 52px; height: 52px; }
+  .bundle-name { font-size: 18px; font-weight: 500; margin: 0 0 4px; }
+  .bundle-tag { font-size: 12px; color: var(--color-text-tertiary); font-style: italic; margin: 0 0 12px; }
+  .bundle-price { font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+  .bundle-price-meta { font-size: 11px; color: var(--color-text-secondary); margin: 0 0 14px; }
+  .bundle-includes { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+  .bundle-items { list-style: none; padding: 0; margin: 0 0 14px; }
+  .bundle-items li { font-size: 13px; padding: 4px 0; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); }
+  .bundle-items li:last-child { border-bottom: none; }
+  .bundle-tier { background: var(--color-background-success); color: var(--color-text-success); font-size: 11px; padding: 8px 10px; border-radius: var(--border-radius-md); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+  .bundle-tier::before { content: '✓'; font-weight: 500; }
+  .bundle-cta { margin-top: auto; padding: 11px; background: var(--color-text-primary); color: var(--color-background-primary); border: none; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+  .bundle-cta:hover { opacity: 0.85; }
+  .bundle-cta.secondary { background: transparent; color: var(--color-text-primary); border: 0.5px solid var(--color-border-secondary); }
+  .bundle-cta.secondary:hover { background: var(--color-background-secondary); opacity: 1; }
+  .picker-cutoff { text-align: center; font-size: 12px; color: var(--color-text-tertiary); margin: 20px 0 0; }
+
+  /* STEP 2 — CUSTOMIZE */
+  .cust-head { margin: 0 0 18px; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+  .cust-title { font-size: 20px; font-weight: 500; margin: 0 0 4px; }
+  .cust-sub { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+  .cust-total-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 16px; text-align: right; min-width: 140px; }
+  .cust-total-label { font-size: 11px; color: var(--color-text-tertiary); margin: 0; }
+  .cust-total { font-size: 20px; font-weight: 500; margin: 0; }
+  .cust-total-tier { font-size: 11px; color: var(--color-text-success); margin: 0; }
+  .cust-banner { background: var(--color-background-success); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 20px; font-size: 12px; color: var(--color-text-success); display: flex; gap: 10px; align-items: center; }
+  .cust-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-text-success); flex-shrink: 0; }
+  .cust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+  .cust-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px; display: flex; flex-direction: column; }
+  .cust-card-head { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .cust-thumb { width: 48px; height: 48px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); flex-shrink: 0; }
+  .cust-thumb svg { width: 22px; height: 22px; }
+  .cust-card-name { font-size: 13px; font-weight: 500; margin: 0 0 2px; }
+  .cust-card-price { font-size: 12px; color: var(--color-text-secondary); margin: 0; }
+  .opt-label { font-size: 10px; color: var(--color-text-tertiary); margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .opt-row { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+  .opt { flex: 1 1 auto; padding: 5px 6px; border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; background: transparent; font-size: 11px; cursor: pointer; color: var(--color-text-secondary); font-family: inherit; }
+  .opt.sel { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+  .cust-input { font-size: 11px; padding: 6px 8px; margin-bottom: 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; width: 100%; font-family: inherit; color: var(--color-text-primary); background: var(--color-background-primary); }
+  .jersey-row { display: grid; grid-template-columns: 2fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .jersey-row .cust-input { margin-bottom: 0; }
+  .team-samples { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; padding: 6px 8px; background: var(--color-background-secondary); border-radius: 4px; }
+  .team-samples-label { font-size: 10px; color: var(--color-text-tertiary); width: 100%; margin-bottom: 2px; }
+  .team-chip { font-size: 10px; padding: 3px 7px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); border-radius: 10px; color: var(--color-text-secondary); cursor: pointer; font-family: inherit; }
+  .team-chip:hover { color: var(--color-text-primary); border-color: var(--color-border-secondary); }
+  .team-chip.sel { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+  .engrave-toggle { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 11px; color: var(--color-text-secondary); cursor: pointer; user-select: none; }
+  .engrave-toggle input { cursor: pointer; }
+  .cust-actions { display: flex; gap: 10px; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 0.5px solid var(--color-border-tertiary); }
+  .cust-back-link { background: transparent; border: none; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; font-family: inherit; padding: 8px 0; }
+  .cust-back-link:hover { color: var(--color-text-primary); }
+  .cust-cta { padding: 11px 24px; background: var(--color-text-primary); color: var(--color-background-primary); border: none; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+  .cust-cta:hover { opacity: 0.85; }
+
+  /* STEP 3 — CHECKOUT (reused from v3) */
+  .co-head { border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 14px; margin-bottom: 18px; }
+  .co-h-title { font-size: 20px; font-weight: 500; margin: 0 0 2px; }
+  .co-h-sub { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+  .co-h-sub strong { color: var(--color-text-primary); font-weight: 500; }
+  .co-earned { background: var(--color-background-success); border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 22px; }
+  .co-e-title { font-size: 14px; font-weight: 500; color: var(--color-text-success); margin: 0 0 8px; }
+  .co-e-list { display: grid; gap: 4px; margin-bottom: 12px; }
+  .co-e-item { font-size: 12px; color: var(--color-text-success); display: flex; gap: 6px; }
+  .co-e-item::before { content: '✓'; font-weight: 500; }
+  .co-choice-block { border-top: 0.5px solid var(--color-border-success); padding-top: 10px; }
+  .co-choice-label { font-size: 12px; color: var(--color-text-success); margin: 0 0 6px; }
+  .co-choice-row { display: flex; gap: 6px; }
+  .co-choice { flex: 1; padding: 7px 10px; background: transparent; border: 0.5px solid var(--color-border-success); border-radius: var(--border-radius-md); font-size: 12px; color: var(--color-text-success); cursor: pointer; font-family: inherit; text-align: left; }
+  .co-choice.sel { background: var(--color-text-success); color: var(--color-background-success); }
+  .co-next { font-size: 11px; color: var(--color-text-success); margin: 10px 0 0; opacity: 0.75; }
+  .co-sec { margin-bottom: 22px; }
+  .co-sec-title { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .co-items { display: grid; gap: 10px; }
+  .co-item { display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; padding: 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); align-items: start; }
+  .co-thumb { width: 52px; height: 52px; background: var(--color-background-primary); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); }
+  .co-thumb svg { width: 26px; height: 26px; }
+  .co-item-name { font-size: 13px; font-weight: 500; margin: 0 0 2px; }
+  .co-item-vari { font-size: 11px; color: var(--color-text-secondary); margin: 0 0 4px; }
+  .co-item-engrave { font-size: 12px; color: var(--color-text-primary); font-family: var(--font-serif); font-style: italic; margin: 0; padding: 4px 8px; background: var(--color-background-primary); border-radius: 4px; border-left: 2px solid var(--color-border-secondary); display: inline-block; }
+  .co-item-price { font-size: 13px; font-weight: 500; }
+  .co-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
+  .co-tog { flex: 1; padding: 9px; border: 0.5px solid var(--color-border-tertiary); background: transparent; border-radius: var(--border-radius-md); font-size: 12px; color: var(--color-text-secondary); cursor: pointer; font-family: inherit; }
+  .co-tog.sel { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+  .co-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .co-field { display: flex; flex-direction: column; gap: 3px; }
+  .co-field.full { grid-column: 1 / -1; }
+  .co-label { font-size: 11px; color: var(--color-text-tertiary); }
+  .co-input { padding: 9px 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; background: var(--color-background-primary); color: var(--color-text-primary); font-family: inherit; }
+  .co-delivery { font-size: 12px; color: var(--color-text-success); padding: 8px 0 0; }
+  .co-delivery::before { content: '✓ '; font-weight: 500; }
+  .co-gift { width: 100%; padding: 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; resize: vertical; min-height: 64px; font-family: inherit; color: var(--color-text-primary); background: var(--color-background-primary); }
+  .co-guarantees { display: grid; gap: 8px; }
+  .co-g { padding: 10px 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); border-left: 2px solid var(--color-border-secondary); }
+  .co-g-title { font-size: 12px; font-weight: 500; margin: 0 0 2px; }
+  .co-g-desc { font-size: 11px; color: var(--color-text-secondary); margin: 0; }
+  .co-totals { padding: 16px 0; border-top: 0.5px solid var(--color-border-tertiary); border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 18px; }
+  .co-t-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; color: var(--color-text-secondary); }
+  .co-t-row.grand { border-top: 0.5px solid var(--color-border-tertiary); margin-top: 8px; padding-top: 10px; font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+  .co-free { color: var(--color-text-success); }
+  .co-pay-shop { width: 100%; padding: 13px; background: #5A31F4; color: white; border: none; border-radius: var(--border-radius-md); font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 8px; font-family: inherit; }
+  .co-pay-alt { width: 100%; padding: 12px; background: var(--color-text-primary); color: var(--color-background-primary); border: none; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+
+  @media (max-width: 700px) {
+    .bundles { grid-template-columns: 1fr; }
+    .cust-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STEP 1: BUNDLE PICKER -->
+<div id="screen-picker">
+  <div class="nav-bar">
+    <span>Baseball BBQ</span>
+    <span class="nav-step">Step 1 of 3 — Pick your gift</span>
+  </div>
+  <div class="page">
+    <div class="picker-header">
+      <p class="picker-title">A gift he'll actually use every weekend</p>
+      <p class="picker-sub">Three pre-built bundles. Personalize any piece after you pick. Order by June 7 for Father's Day delivery.</p>
+    </div>
+    <div class="bundles">
+      <!-- Bundle 1 -->
+      <div class="bundle">
+        <div class="bundle-thumb">
+          <svg viewBox="0 0 80 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 8h6v18h-6z M11 26h4v10h-4z"/>
+            <path d="M28 10v18l-2 2v6 M34 10v18l2 2v6"/>
+            <path d="M46 8h14v5H46z M52 13h2v23h-2z"/>
+            <circle cx="68" cy="18" r="4"/><path d="M72 17h7v2h-7z"/>
+          </svg>
+        </div>
+        <p class="bundle-name">The Rookie</p>
+        <p class="bundle-tag">Four grill tools. No frills.</p>
+        <p class="bundle-price">$129.99</p>
+        <p class="bundle-price-meta">Ships by June 10</p>
+        <p class="bundle-includes">What's inside</p>
+        <ul class="bundle-items">
+          <li>Slider Spatula</li>
+          <li>Splitfinger Tongs</li>
+          <li>Brushback Scraper</li>
+          <li>Pickoff Bottle Opener</li>
+        </ul>
+        <div class="bundle-tier">Unlocks All-Star rewards</div>
+        <button type="button" class="bundle-cta secondary" data-pick="rookie">Pick & personalize</button>
+      </div>
+
+      <!-- Bundle 2 — FEATURED -->
+      <div class="bundle featured">
+        <span class="bundle-badge">Most popular</span>
+        <div class="bundle-thumb">
+          <svg viewBox="0 0 80 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 8h5v18h-5z M9 26h3v10h-3z"/>
+            <path d="M22 10v18l-2 2v6 M27 10v18l2 2v6"/>
+            <path d="M38 8h12v4H38z M43 12h2v20h-2z"/>
+            <circle cx="58" cy="18" r="3.5"/><path d="M62 17h7v2h-7z"/>
+            <path d="M8 34h62v3H8z M14 37v4 M30 37v4 M46 37v4 M62 37v4"/>
+          </svg>
+        </div>
+        <p class="bundle-name">The Starter Lineup</p>
+        <p class="bundle-tag">The core set, plus display.</p>
+        <p class="bundle-price">$164.99</p>
+        <p class="bundle-price-meta">Ships by June 10</p>
+        <p class="bundle-includes">What's inside</p>
+        <ul class="bundle-items">
+          <li>Slider Spatula</li>
+          <li>Splitfinger Tongs</li>
+          <li>Brushback Scraper</li>
+          <li>Pickoff Bottle Opener</li>
+          <li>Bat Rack Display</li>
+        </ul>
+        <div class="bundle-tier">Unlocks MVP rewards</div>
+        <button type="button" class="bundle-cta" data-pick="lineup">Pick & personalize</button>
+      </div>
+
+      <!-- Bundle 3 -->
+      <div class="bundle">
+        <div class="bundle-thumb">
+          <svg viewBox="0 0 80 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="6" width="16" height="12"/>
+            <path d="M10 6v12 M18 6v12"/>
+            <path d="M28 8h4v14h-4z M29 22h2v8h-2z"/>
+            <path d="M38 10v14l-1.5 1.5v4 M41.5 10v14l1.5 1.5v4"/>
+            <path d="M50 8h10v3H50z M54 11h2v16h-2z"/>
+            <circle cx="66" cy="14" r="2.5"/><path d="M69 13.2h6v1.6h-6z"/>
+            <path d="M6 32h68v3H6z M14 35v3 M30 35v3 M46 35v3 M62 35v3"/>
+          </svg>
+        </div>
+        <p class="bundle-name">The Grand Slam</p>
+        <p class="bundle-tag">Four tools, display, and heirloom board.</p>
+        <p class="bundle-price">$299.99</p>
+        <p class="bundle-price-meta">Ships by June 10</p>
+        <p class="bundle-includes">What's inside</p>
+        <ul class="bundle-items">
+          <li>Slider Spatula</li>
+          <li>Splitfinger Tongs</li>
+          <li>Brushback Scraper</li>
+          <li>Pickoff Bottle Opener</li>
+          <li>Bat Rack Display</li>
+          <li>Home Plate Cutting Board · Text</li>
+        </ul>
+        <div class="bundle-tier">Unlocks Hall of Famer rewards</div>
+        <button type="button" class="bundle-cta secondary" data-pick="grandslam">Pick & personalize</button>
+      </div>
+    </div>
+    <p class="picker-cutoff">Every bundle comes with premium gift packaging, free shipping, and a 60-day usage swap guarantee.</p>
+  </div>
+</div>
+
+<!-- STEP 2: CUSTOMIZE -->
+<div id="screen-customize" class="hidden">
+  <div class="nav-bar">
+    <button class="nav-back" id="backToPicker" type="button">← Change bundle</button>
+    <span class="nav-step">Step 2 of 3 — Personalize your gift</span>
+  </div>
+  <div class="page">
+    <div class="cust-head">
+      <div>
+        <p class="cust-title" id="custTitle">Personalize The Starter Lineup</p>
+        <p class="cust-sub">Add text engraving on any piece. Upgrade the Bat Rack or cutting board. Skip it all and ship the bundle as-is.</p>
+      </div>
+      <div class="cust-total-box">
+        <p class="cust-total-label">Your total</p>
+        <p class="cust-total" id="custTotal">$164.99</p>
+        <p class="cust-total-tier" id="custTotalTier">MVP tier</p>
+      </div>
+    </div>
+    <div class="cust-banner">
+      <span class="cust-banner-dot"></span>
+      <span id="custBanner">All personalization is included in your bundle price — earned rewards stay regardless of how much you customize.</span>
+    </div>
+    <div class="cust-grid" id="custGrid"></div>
+    <div class="cust-actions">
+      <button type="button" class="cust-back-link" id="backToPicker2">← Back to bundles</button>
+      <button type="button" class="cust-cta" id="goToCheckout">Continue to checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3: CHECKOUT -->
+<div id="screen-checkout" class="hidden">
+  <div class="nav-bar">
+    <button class="nav-back" id="backToCust" type="button">← Back to personalize</button>
+    <span class="nav-step">Step 3 of 3 — Checkout</span>
+  </div>
+  <div class="page" style="max-width: 720px; margin: 0 auto;">
+    <div class="co-head">
+      <p class="co-h-title">Checkout</p>
+      <p class="co-h-sub">Ships by <strong>June 10</strong> — arrives in time for Father's Day on <strong>Sunday, June 21</strong></p>
+    </div>
+    <div class="co-earned" id="coEarned">
+      <p class="co-e-title" id="coTierTitle">You unlocked MVP tier</p>
+      <div class="co-e-list" id="coUnlocksList"></div>
+      <div class="co-choice-block" id="coChoiceBlock">
+        <p class="co-choice-label" id="coChoiceLabel">Pick your MVP bonus:</p>
+        <div class="co-choice-row" id="coChoiceRow">
+          <button type="button" class="co-choice sel" data-choice="ship">2-day expedited shipping</button>
+          <button type="button" class="co-choice" data-choice="rub">Free Diamond Dirt Rub</button>
+        </div>
+        <p class="co-next" id="coNext"></p>
+      </div>
+    </div>
+    <div class="co-sec">
+      <p class="co-sec-title" id="coBuildTitle">Your bundle</p>
+      <div class="co-items" id="coItems"></div>
+    </div>
+    <div class="co-sec">
+      <p class="co-sec-title">Shipping</p>
+      <div class="co-toggle">
+        <button type="button" class="co-tog sel" data-ship="gift">Send as a gift</button>
+        <button type="button" class="co-tog" data-ship="me">Ship to me</button>
+      </div>
+      <div class="co-fields">
+        <div class="co-field full"><span class="co-label">Recipient name</span><input type="text" class="co-input" value="Robert Mitchell"></div>
+        <div class="co-field full"><span class="co-label">Street address</span><input type="text" class="co-input" placeholder="123 Main St"></div>
+        <div class="co-field"><span class="co-label">City</span><input type="text" class="co-input"></div>
+        <div class="co-field"><span class="co-label">ZIP</span><input type="text" class="co-input"></div>
+      </div>
+      <div class="co-delivery" id="coDelivery">Arrives June 10–14 with 2-day expedited shipping</div>
+    </div>
+    <div class="co-sec">
+      <p class="co-sec-title">Gift message (optional)</p>
+      <textarea class="co-gift" placeholder="We'll print this on a card tucked inside the gift box. Something like: &quot;Dad, you taught me how to throw a curveball and sear a ribeye. Happy Father's Day.&quot;"></textarea>
+    </div>
+    <div class="co-sec">
+      <p class="co-sec-title">Your guarantees</p>
+      <div class="co-guarantees" id="coGuarantees"></div>
+    </div>
+    <div class="co-totals" id="coTotals"></div>
+    <button type="button" class="co-pay-shop">Pay with Shop Pay</button>
+    <button type="button" class="co-pay-alt">Continue to payment</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ICONS & DATA
+  var ICONS = {
+    sp: 'M8 3h8v9H8z M11 12h2v9h-2z',
+    to: 'M9 3v11l-2 2v5 M15 3v11l2 2v5',
+    sc: 'M5 3h14v5H5z M11 8h2v13h-2z',
+    bo: 'M4 12a4 4 0 1 0 8 0 4 4 0 1 0 -8 0 M12 11h10v2H12z',
+    br: 'M3 10h18v3H3z M6 13v6 M12 13v6 M18 13v6',
+    cb: 'M4 6h16v12H4z M8 6v12 M16 6v12'
+  };
+  var TEAM_SAMPLES = ['Yankees', 'Dodgers', 'Red Sox', 'Braves', 'Cubs'];
+
+  // Bundle defs — each bundle has its items, base price, and what's customizable
+  var BUNDLES = {
+    rookie: {
+      name: 'The Rookie',
+      basePrice: 129.99,
+      items: [
+        { id: 'sp', name: 'Slider Spatula', type: 'tool' },
+        { id: 'to', name: 'Splitfinger Tongs', type: 'tool' },
+        { id: 'sc', name: 'Brushback Scraper', type: 'tool' },
+        { id: 'bo', name: 'Pickoff Bottle Opener', type: 'tool' }
+      ]
+    },
+    lineup: {
+      name: 'The Starter Lineup',
+      basePrice: 164.99,
+      items: [
+        { id: 'sp', name: 'Slider Spatula', type: 'tool' },
+        { id: 'to', name: 'Splitfinger Tongs', type: 'tool' },
+        { id: 'sc', name: 'Brushback Scraper', type: 'tool' },
+        { id: 'bo', name: 'Pickoff Bottle Opener', type: 'tool' },
+        { id: 'br', name: 'Bat Rack Display', type: 'batRack' }
+      ]
+    },
+    grandslam: {
+      name: 'The Grand Slam',
+      basePrice: 299.99,
+      items: [
+        { id: 'sp', name: 'Slider Spatula', type: 'tool' },
+        { id: 'to', name: 'Splitfinger Tongs', type: 'tool' },
+        { id: 'sc', name: 'Brushback Scraper', type: 'tool' },
+        { id: 'bo', name: 'Pickoff Bottle Opener', type: 'tool' },
+        { id: 'br', name: 'Bat Rack Display', type: 'batRack' },
+        { id: 'cb', name: 'Home Plate Cutting Board', type: 'cuttingBoard' }
+      ]
+    }
+  };
+
+  // Upcharges
+  var TOOL_ENGRAVE = 10;
+  var TEAM_UPCHARGE = 5;
+  // Cutting board upcharges from base (default: 12×12 Text — bundle default):
+  // Plain 12×12: -15 | Plain 17×17: -5 | Text 12×12: 0 | Text 17×17: +10 | Jersey 12×12: +20 | Jersey 17×17: +20
+  var CB_UPCHARGE = {
+    'plain.12x12': -15, 'plain.17x17': -5,
+    'text.12x12': 0,    'text.17x17': 10,
+    'jersey.12x12': 20, 'jersey.17x17': 20
+  };
+
+  var TIERS = [
+    { key:'starter', name:'Starter',       threshold: 60,  unlocks:['Free standard shipping'] },
+    { key:'allstar', name:'All-Star',      threshold:100,  unlocks:['Free standard shipping','Premium gift packaging'] },
+    { key:'mvp',     name:'MVP',           threshold:150,  unlocks:['Free standard shipping','Premium gift packaging','Diamond Dirt Rub or 2-day shipping'] },
+    { key:'hof',     name:'Hall of Famer', threshold:250,  unlocks:['Free standard shipping','Premium gift packaging','Diamond Dirt Rub or 2-day shipping','Lifetime heirloom warranty'] }
+  ];
+
+  // STATE
+  var currentBundle = null;
+  var itemStates = {};  // keyed by item.id
+  var selectedBonus = 'ship';
+
+  function fmt(n){ return '$' + n.toFixed(2); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  // SCREEN NAVIGATION
+  function showScreen(which){
+    document.getElementById('screen-picker').classList.toggle('hidden', which !== 'picker');
+    document.getElementById('screen-customize').classList.toggle('hidden', which !== 'customize');
+    document.getElementById('screen-checkout').classList.toggle('hidden', which !== 'checkout');
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll('.bundle-cta').forEach(function(b){
+    b.addEventListener('click', function(){ pickBundle(b.dataset.pick); });
+  });
+  document.getElementById('backToPicker').addEventListener('click', function(){ showScreen('picker'); });
+  document.getElementById('backToPicker2').addEventListener('click', function(){ showScreen('picker'); });
+  document.getElementById('backToCust').addEventListener('click', function(){ showScreen('customize'); });
+  document.getElementById('goToCheckout').addEventListener('click', function(){ renderCheckout(); showScreen('checkout'); });
+
+  // PICK A BUNDLE — initialize state per item
+  function pickBundle(key){
+    currentBundle = key;
+    var bundle = BUNDLES[key];
+    itemStates = {};
+    bundle.items.forEach(function(item){
+      if (item.type === 'tool') {
+        itemStates[item.id] = { engrave: false, text: '' };
+      } else if (item.type === 'batRack') {
+        itemStates[item.id] = { variant: 'regular', team: '' };
+      } else if (item.type === 'cuttingBoard') {
+        // Bundle 3 default: 12×12 Text
+        itemStates[item.id] = { size: '12x12', style: 'text', text: '', jerseyName: '', jerseyNumber: '' };
+      }
+    });
+    document.getElementById('custTitle').textContent = 'Personalize ' + bundle.name;
+    renderCustomize();
+    showScreen('customize');
+  }
+
+  // PRICING
+  function getItemUpcharge(item, state){
+    if (item.type === 'tool') return state.engrave ? TOOL_ENGRAVE : 0;
+    if (item.type === 'batRack') return state.variant === 'team' ? TEAM_UPCHARGE : 0;
+    if (item.type === 'cuttingBoard') return CB_UPCHARGE[state.style + '.' + state.size] || 0;
+    return 0;
+  }
+
+  function getTotalPrice(){
+    if (!currentBundle) return 0;
+    var bundle = BUNDLES[currentBundle];
+    var total = bundle.basePrice;
+    bundle.items.forEach(function(item){
+      total += getItemUpcharge(item, itemStates[item.id]);
+    });
+    return Math.round(total * 100) / 100;
+  }
+
+  function currentTier(total){ for (var i = TIERS.length - 1; i >= 0; i--) if (total >= TIERS[i].threshold) return TIERS[i]; return null; }
+  function nextTier(total){ for (var i = 0; i < TIERS.length; i++) if (total < TIERS[i].threshold) return TIERS[i]; return null; }
+
+  // RENDER CUSTOMIZE
+  function renderCustomize(){
+    var bundle = BUNDLES[currentBundle];
+    var grid = document.getElementById('custGrid');
+    grid.innerHTML = bundle.items.map(function(item){
+      var state = itemStates[item.id];
+      if (item.type === 'tool') return renderToolCust(item, state);
+      if (item.type === 'batRack') return renderBatRackCust(item, state);
+      if (item.type === 'cuttingBoard') return renderCuttingBoardCust(item, state);
+    }).join('');
+    attachCustHandlers();
+    refreshCustTotal();
+  }
+
+  function renderToolCust(item, state){
+    var up = state.engrave ? ' <span style="color:var(--color-text-success)">+$'+TOOL_ENGRAVE+'</span>' : '';
+    return '<div class="cust-card" data-item="'+item.id+'" data-type="tool">'+
+      '<div class="cust-card-head">'+
+        '<div class="cust-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[item.id]+'"/></svg></div>'+
+        '<div><p class="cust-card-name">'+item.name+'</p><p class="cust-card-price" data-sub>Included'+up+'</p></div>'+
+      '</div>'+
+      '<label class="engrave-toggle"><input type="checkbox" data-opt="engrave" '+(state.engrave?'checked':'')+'/> Add text engraving (+$'+TOOL_ENGRAVE+')</label>'+
+      '<div data-text-block style="display:'+(state.engrave?'block':'none')+'">'+
+        '<input type="text" class="cust-input" data-input="text" placeholder="Name, date, or message" maxlength="30" value="'+esc(state.text)+'"/>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function renderBatRackCust(item, state){
+    var up = state.variant === 'team' ? ' <span style="color:var(--color-text-success)">+$'+TEAM_UPCHARGE+'</span>' : '';
+    return '<div class="cust-card" data-item="'+item.id+'" data-type="batRack">'+
+      '<div class="cust-card-head">'+
+        '<div class="cust-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[item.id]+'"/></svg></div>'+
+        '<div><p class="cust-card-name">'+item.name+'</p><p class="cust-card-price" data-sub>Included'+up+'</p></div>'+
+      '</div>'+
+      '<p class="opt-label">Style</p>'+
+      '<div class="opt-row">'+
+        '<button type="button" class="opt '+(state.variant==='regular'?'sel':'')+'" data-opt="variant" data-val="regular">Regular</button>'+
+        '<button type="button" class="opt '+(state.variant==='team'?'sel':'')+'" data-opt="variant" data-val="team">+Team $'+TEAM_UPCHARGE+'</button>'+
+      '</div>'+
+      '<div data-team-block style="display:'+(state.variant==='team'?'block':'none')+'">'+
+        '<div class="team-samples">'+
+          '<span class="team-samples-label">Popular teams</span>'+
+          TEAM_SAMPLES.map(function(t){ return '<button type="button" class="team-chip '+(state.team===t?'sel':'')+'" data-team="'+t+'">'+t+'</button>'; }).join('')+
+        '</div>'+
+        '<input type="text" class="cust-input" data-input="team" placeholder="Or type any team" maxlength="30" value="'+esc(state.team)+'"/>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function renderCuttingBoardCust(item, state){
+    var up = getItemUpcharge(item, state);
+    var upText = up === 0 ? '' : (up > 0 ? ' <span style="color:var(--color-text-success)">+$'+up+'</span>' : ' <span style="color:var(--color-text-secondary)">-$'+Math.abs(up)+'</span>');
+    return '<div class="cust-card" style="grid-column: 1 / -1" data-item="'+item.id+'" data-type="cuttingBoard">'+
+      '<div class="cust-card-head">'+
+        '<div class="cust-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[item.id]+'"/></svg></div>'+
+        '<div><p class="cust-card-name">'+item.name+'</p><p class="cust-card-price" data-sub>Included'+upText+'</p></div>'+
+      '</div>'+
+      '<p class="opt-label">Size</p>'+
+      '<div class="opt-row">'+
+        '<button type="button" class="opt '+(state.size==='12x12'?'sel':'')+'" data-opt="size" data-val="12x12">12×12</button>'+
+        '<button type="button" class="opt '+(state.size==='17x17'?'sel':'')+'" data-opt="size" data-val="17x17">17×17</button>'+
+      '</div>'+
+      '<p class="opt-label">Style</p>'+
+      '<div class="opt-row">'+
+        '<button type="button" class="opt '+(state.style==='plain'?'sel':'')+'" data-opt="style" data-val="plain">Plain</button>'+
+        '<button type="button" class="opt '+(state.style==='text'?'sel':'')+'" data-opt="style" data-val="text">Text</button>'+
+        '<button type="button" class="opt '+(state.style==='jersey'?'sel':'')+'" data-opt="style" data-val="jersey">Jersey</button>'+
+      '</div>'+
+      '<div data-text-block style="display:'+(state.style==='text'?'block':'none')+'">'+
+        '<input type="text" class="cust-input" data-input="text" placeholder="Name, date, or message" maxlength="40" value="'+esc(state.text)+'"/>'+
+      '</div>'+
+      '<div data-jersey-block style="display:'+(state.style==='jersey'?'block':'none')+'">'+
+        '<div class="jersey-row">'+
+          '<input type="text" class="cust-input" data-input="jerseyName" placeholder="Last name" maxlength="12" value="'+esc(state.jerseyName)+'"/>'+
+          '<input type="text" class="cust-input" data-input="jerseyNumber" placeholder="#" maxlength="2" value="'+esc(state.jerseyNumber)+'"/>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function attachCustHandlers(){
+    var grid = document.getElementById('custGrid');
+    grid.onclick = function(e){
+      var card = e.target.closest('.cust-card');
+      if (!card) return;
+      var itemId = card.dataset.item;
+      var state = itemStates[itemId];
+      if (e.target.classList.contains('opt')) {
+        var opt = e.target.dataset.opt, val = e.target.dataset.val;
+        state[opt] = val;
+        card.querySelectorAll('.opt[data-opt="'+opt+'"]').forEach(function(b){ b.classList.toggle('sel', b.dataset.val === val); });
+        refreshCardBlocks(card, itemId);
+        refreshCustTotal();
+      }
+      if (e.target.classList.contains('team-chip')) {
+        state.team = e.target.dataset.team;
+        card.querySelectorAll('.team-chip').forEach(function(c){ c.classList.toggle('sel', c.dataset.team === state.team); });
+        var inp = card.querySelector('[data-input="team"]');
+        if (inp) inp.value = state.team;
+      }
+    };
+    grid.onchange = function(e){
+      if (e.target.dataset.opt === 'engrave') {
+        var card = e.target.closest('.cust-card');
+        itemStates[card.dataset.item].engrave = e.target.checked;
+        refreshCardBlocks(card, card.dataset.item);
+        refreshCustTotal();
+      }
+    };
+    grid.oninput = function(e){
+      var input = e.target.closest('[data-input]');
+      if (!input) return;
+      var card = e.target.closest('.cust-card');
+      var itemId = card.dataset.item;
+      var field = input.dataset.input;
+      itemStates[itemId][field] = input.value;
+      if (field === 'team') {
+        card.querySelectorAll('.team-chip').forEach(function(c){ c.classList.toggle('sel', c.dataset.team === input.value); });
+      }
+    };
+  }
+
+  function refreshCardBlocks(card, itemId){
+    var state = itemStates[itemId];
+    var type = card.dataset.type;
+    if (type === 'tool') {
+      var tb = card.querySelector('[data-text-block]');
+      if (tb) tb.style.display = state.engrave ? 'block' : 'none';
+    } else if (type === 'batRack') {
+      var teamBlock = card.querySelector('[data-team-block]');
+      if (teamBlock) teamBlock.style.display = state.variant === 'team' ? 'block' : 'none';
+    } else if (type === 'cuttingBoard') {
+      var textBlock = card.querySelector('[data-text-block]');
+      var jerseyBlock = card.querySelector('[data-jersey-block]');
+      if (textBlock) textBlock.style.display = state.style === 'text' ? 'block' : 'none';
+      if (jerseyBlock) jerseyBlock.style.display = state.style === 'jersey' ? 'block' : 'none';
+    }
+  }
+
+  function refreshCustTotal(){
+    var bundle = BUNDLES[currentBundle];
+    var total = getTotalPrice();
+    var tier = currentTier(total);
+    document.getElementById('custTotal').textContent = fmt(total);
+    document.getElementById('custTotalTier').textContent = tier ? tier.name + ' tier' : '';
+
+    // Update per-item price subtitles
+    bundle.items.forEach(function(item){
+      var state = itemStates[item.id];
+      var up = getItemUpcharge(item, state);
+      var card = document.querySelector('.cust-card[data-item="'+item.id+'"]');
+      if (!card) return;
+      var sub = card.querySelector('[data-sub]');
+      if (!sub) return;
+      var upText = up === 0 ? '' : (up > 0 ? ' <span style="color:var(--color-text-success)">+$'+up+'</span>' : ' <span style="color:var(--color-text-secondary)">-$'+Math.abs(up)+'</span>');
+      sub.innerHTML = 'Included' + upText;
+    });
+
+    // Banner message shifts based on tier
+    var banner = document.getElementById('custBanner');
+    var next = nextTier(total);
+    if (tier && tier.key === 'hof') {
+      banner.textContent = "You've unlocked every reward — lifetime heirloom warranty included.";
+    } else if (next) {
+      var diff = (next.threshold - total).toFixed(2);
+      var nu = next.unlocks.filter(function(u){ return !tier || tier.unlocks.indexOf(u) === -1; });
+      banner.textContent = 'Add $' + diff + ' in upgrades to unlock ' + next.name + ' — ' + (nu[0] || 'more rewards').toLowerCase() + '.';
+    } else {
+      banner.textContent = 'All personalization is included — earned rewards stay regardless of upgrades.';
+    }
+  }
+
+  // CHECKOUT
+  function renderCheckout(){
+    var bundle = BUNDLES[currentBundle];
+    var total = getTotalPrice();
+    var tier = currentTier(total);
+    var next = nextTier(total);
+
+    document.getElementById('coTierTitle').textContent = tier ? 'You unlocked ' + tier.name + ' tier' : 'Add more to earn a tier';
+    document.getElementById('coUnlocksList').innerHTML = (tier ? tier.unlocks : []).map(function(u){ return '<div class="co-e-item">' + u + '</div>'; }).join('');
+
+    var showBonus = tier && (tier.key === 'mvp' || tier.key === 'hof');
+    var cb = document.getElementById('coChoiceBlock'), cr = document.getElementById('coChoiceRow'), cl = document.getElementById('coChoiceLabel');
+    if (showBonus) { cb.style.display='block'; cr.style.display='flex'; cl.textContent = 'Pick your ' + tier.name + ' bonus:'; }
+    else { cb.style.display = tier ? 'block' : 'none'; if (tier) { cr.style.display='none'; cl.textContent=''; } }
+
+    var nextEl = document.getElementById('coNext');
+    if (next) {
+      var remaining = (next.threshold - total).toFixed(2);
+      var nu = next.unlocks.filter(function(u){ return !tier || tier.unlocks.indexOf(u) === -1; });
+      nextEl.textContent = 'Spend $' + remaining + ' more to unlock ' + next.name + ' — adds ' + (nu[0] || 'more rewards').toLowerCase();
+    } else {
+      nextEl.textContent = 'Top tier reached. Every piece carries a lifetime heirloom warranty.';
+    }
+
+    // Bundle header
+    document.getElementById('coBuildTitle').textContent = bundle.name + ' (' + bundle.items.length + ' pieces)';
+
+    // Items — show each bundle piece with its personalization
+    document.getElementById('coItems').innerHTML = bundle.items.map(function(item){
+      var state = itemStates[item.id];
+      return renderCheckoutItem(item, state);
+    }).join('');
+
+    // Guarantees
+    var hasEngraving = bundle.items.some(function(item){
+      var s = itemStates[item.id];
+      if (item.type === 'tool') return s.engrave;
+      if (item.type === 'cuttingBoard') return s.style === 'text' || s.style === 'jersey';
+      return false;
+    });
+    var gs = [];
+    if (hasEngraving) gs.push({ title: 'Love it or we re-engrave it', desc: 'Wrong name, typo, or change of heart — free re-engraving within 30 days of delivery.' });
+    if (tier) gs.push({ title: '60-day usage swap', desc: 'If he hasn\'t reached for it in 60 days, pick a different piece on us.' });
+    if (tier && tier.key === 'hof') gs.push({ title: 'Lifetime heirloom warranty', desc: 'If the wood cracks, the metal fails, or the engraving fades, we replace it — for life.' });
+    document.getElementById('coGuarantees').innerHTML = gs.map(function(g){
+      return '<div class="co-g"><p class="co-g-title">'+g.title+'</p><p class="co-g-desc">'+g.desc+'</p></div>';
+    }).join('');
+
+    // Totals
+    var th = '<div class="co-t-row"><span>'+bundle.name+' bundle</span><span>'+fmt(total)+'</span></div>';
+    var showedShip = false;
+    if (tier && tier.threshold >= 150 && selectedBonus === 'ship') {
+      th += '<div class="co-t-row"><span>2-day expedited shipping</span><span class="co-free">Free — earned</span></div>';
+      showedShip = true;
+    }
+    if (tier && tier.threshold >= 60 && !showedShip) th += '<div class="co-t-row"><span>Shipping</span><span class="co-free">Free — earned</span></div>';
+    if (!tier || tier.threshold < 60) th += '<div class="co-t-row"><span>Shipping</span><span>$7.00</span></div>';
+    if (tier && tier.threshold >= 100) th += '<div class="co-t-row"><span>Premium gift packaging</span><span class="co-free">Free — earned</span></div>';
+    if (tier && tier.threshold >= 150 && selectedBonus === 'rub') th += '<div class="co-t-row"><span>Diamond Dirt Rub (included)</span><span class="co-free">Free — earned</span></div>';
+    var ft = total;
+    if (!tier || tier.threshold < 60) ft = total + 7;
+    th += '<div class="co-t-row grand"><span>Total</span><span>'+fmt(ft)+'</span></div>';
+    document.getElementById('coTotals').innerHTML = th;
+  }
+
+  function renderCheckoutItem(item, state){
+    var vari = '', engrave = '';
+    if (item.type === 'tool') {
+      vari = state.engrave ? 'Engraved' : 'Regular';
+      if (state.engrave && state.text) engrave = '<p class="co-item-engrave">' + esc(state.text) + '</p>';
+    } else if (item.type === 'batRack') {
+      vari = state.variant === 'team' ? (state.team ? 'Team: ' + esc(state.team) : 'Team variant') : 'Regular';
+    } else if (item.type === 'cuttingBoard') {
+      var size = state.size === '12x12' ? '12" × 12"' : '17" × 17"';
+      var style = { plain: 'Plain', text: 'Text Engraving', jersey: 'Jersey Engraving' }[state.style];
+      vari = size + ' · ' + style;
+      if (state.style === 'text' && state.text) engrave = '<p class="co-item-engrave">' + esc(state.text) + '</p>';
+      if (state.style === 'jersey' && (state.jerseyName || state.jerseyNumber)) {
+        var j = (state.jerseyName || '') + (state.jerseyNumber ? ' #' + state.jerseyNumber : '');
+        engrave = '<p class="co-item-engrave">' + esc(j.trim()) + '</p>';
+      }
+    }
+    return '<div class="co-item">'+
+      '<div class="co-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[item.id]+'"/></svg></div>'+
+      '<div>'+
+        '<p class="co-item-name">'+item.name+'</p>'+
+        (vari ? '<p class="co-item-vari">'+vari+'</p>' : '')+
+        engrave+
+      '</div>'+
+      '<div class="co-item-price">Included</div>'+
+    '</div>';
+  }
+
+  // Bonus + shipping toggle
+  document.querySelectorAll('.co-choice').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.co-choice').forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel');
+      selectedBonus = b.dataset.choice;
+      var d = document.getElementById('coDelivery');
+      d.textContent = selectedBonus === 'ship'
+        ? 'Arrives June 10–14 with 2-day expedited shipping'
+        : 'Arrives June 15–19 with standard shipping + Diamond Dirt Rub included';
+      renderCheckout();
+    });
+  });
+  document.querySelectorAll('.co-tog').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.co-tog').forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel');
+    });
+  });
+})();
+</script>
+</body>
+</html>
